@@ -27,10 +27,10 @@ app.use("/api/admin", adminRoutes);
 
 app.get("/api/setupdb", async (req, res) => {
   try {
-    const { stdout, stderr } = await execAsync("npx prisma db push --accept-data-loss");
+    const { stdout, stderr } = await execAsync("node ./node_modules/prisma/build/index.js db push --accept-data-loss");
     res.json({ success: true, stdout, stderr });
   } catch (err) {
-    res.json({ success: false, error: err.message, stack: err.stack });
+    res.json({ success: false, error: err.message, stack: err.stack, details: err.stderr || "no stderr" });
   }
 });
 
@@ -90,7 +90,7 @@ app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`);
   try {
     console.log("Running prisma db push...");
-    await execAsync("npx prisma db push --accept-data-loss");
+    await execAsync("node ./node_modules/prisma/build/index.js db push --accept-data-loss");
     console.log("Prisma db push completed.");
   } catch (err) {
     console.error("Prisma db push failed (this is non-fatal if tables already exist or if no DB is attached yet):", err.message);
