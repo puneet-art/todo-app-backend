@@ -72,14 +72,12 @@ async function ensureAdmin() {
   }
 }
 
-const PORT = config.port;
+const PORT = config.port || process.env.PORT || 5000;
 app.listen(PORT, async () => {
-  console.log(`Server running on ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
   try {
-    await prisma.$connect();
-    console.log("Database connected");
     await ensureAdmin();
   } catch (err) {
-    console.error("Database connection failed:", err?.message || err);
+    console.error("Admin bootstrap error:", err?.message || err);
   }
 });
