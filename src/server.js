@@ -73,11 +73,6 @@ async function ensureAdmin() {
 }
 
 const PORT = config.port || process.env.PORT || 5000;
-app.listen(PORT, async () => {
+app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  try {
-    await ensureAdmin();
-  } catch (err) {
-    console.error("Admin bootstrap error:", err?.message || err);
-  }
 });
