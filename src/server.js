@@ -9,6 +9,10 @@ import authRoutes from "./routes/auth.routes.js";
 import taskRoutes from "./routes/task.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 
+import { exec } from "child_process";
+import { promisify } from "util";
+const execAsync = promisify(exec);
+
 const app = express();
 
 app.use(cors({ origin: config.corsOrigin, credentials: true }));
@@ -80,11 +84,6 @@ async function ensureAdmin() {
     console.error("Admin bootstrap error", err);
   }
 }
-
-import { exec } from "child_process";
-import { promisify } from "util";
-
-const execAsync = promisify(exec);
 
 const PORT = config.port || process.env.PORT || 5000;
 app.listen(PORT, async () => {
