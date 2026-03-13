@@ -72,7 +72,19 @@ async function ensureAdmin() {
   }
 }
 
+import { exec } from "child_process";
+import { promisify } from "util";
+
+const execAsync = promisify(exec);
+
 const PORT = config.port || process.env.PORT || 5000;
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`);
+  try {
+    console.log("Running prisma db push...");
+    await execAsync("npx prisma db push --accept-data-loss");
+    console.log("Prisma db push completed.");
+  } catch (err) {
+    console.error("Prisma db push failed (this is non-fatal if tables already exist or if no DB is attached yet):", err.message);
+  }
 });
