@@ -21,6 +21,15 @@ app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
 app.use("/api/admin", adminRoutes);
 
+app.get("/api/setupdb", async (req, res) => {
+  try {
+    const { stdout, stderr } = await execAsync("npx prisma db push --accept-data-loss");
+    res.json({ success: true, stdout, stderr });
+  } catch (err) {
+    res.json({ success: false, error: err.message, stack: err.stack });
+  }
+});
+
 async function ensureAdmin() {
   try {
     const email = config.adminEmail;
